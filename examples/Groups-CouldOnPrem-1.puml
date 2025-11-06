@@ -17,6 +17,9 @@
 !include AWSPuml/Groups/PrivateSubnet.puml
 !include AWSPuml/Groups/GenericBlue.puml
 !include AWSPuml/Groups/GenericGreen.puml
+!include AWSPuml/Groups/GenericOrange.puml
+!include AWSPuml/Groups/GenericPink.puml
+!include AWSPuml/Groups/GenericTurquoise.puml
 !include AWSPuml/Groups/Generic.puml
 !include AWSPuml/Groups/GenericAlt.puml
 !include AWSPuml/NetworkingContentDelivery/VPCNATGateway.puml
@@ -30,29 +33,31 @@
 !include AWSPuml/Analytics/ManagedStreamingforApacheKafka.puml
 !include AWSPuml/NetworkingContentDelivery/Route53.puml
 !include AWSPuml/NetworkingContentDelivery/Route53HostedZone.puml
+
 '
 ' k8s
 '
 ' Kubernetes
 !define KubernetesPuml https://raw.githubusercontent.com/dcasati/kubernetes-PlantUML/master/dist
 
-!includeurl KubernetesPuml/kubernetes_Common.puml
-!includeurl KubernetesPuml/kubernetes_Context.puml
-!includeurl KubernetesPuml/kubernetes_Simplified.puml
+!include KubernetesPuml/kubernetes_Common.puml
+!include KubernetesPuml/kubernetes_Context.puml
+!include KubernetesPuml/kubernetes_Simplified.puml
 
-!includeurl KubernetesPuml/OSS/KubernetesSvc.puml
-!includeurl KubernetesPuml/OSS/KubernetesIng.puml
-!includeurl KubernetesPuml/OSS/KubernetesPod.puml
-!includeurl KubernetesPuml/OSS/KubernetesRs.puml
-!includeurl KubernetesPuml/OSS/KubernetesDeploy.puml
-!includeurl KubernetesPuml/OSS/KubernetesHpa.puml
+!include KubernetesPuml/OSS/KubernetesSvc.puml
+!include KubernetesPuml/OSS/KubernetesIng.puml
+!include KubernetesPuml/OSS/KubernetesPod.puml
+!include KubernetesPuml/OSS/KubernetesRs.puml
+!include KubernetesPuml/OSS/KubernetesDeploy.puml
+!include KubernetesPuml/OSS/KubernetesHpa.puml
 '
 !define AzurePuml https://raw.githubusercontent.com/plantuml-stdlib/Azure-PlantUML/master/dist
-!includeurl AzurePuml/AzureCommon.puml
-!includeurl AzurePuml/Databases/all.puml
-!includeurl AzurePuml/Compute/AzureFunction.puml
-!includeurl AzurePuml/Networking/AzureDNS.puml
-'
+!include AzurePuml/AzureCommon.puml
+!include AzurePuml/Databases/all.puml
+!include AzurePuml/Compute/AzureFunction.puml
+!include AzurePuml/Networking/AzureDNS.puml
+!include AzurePuml/Compute/AzureFunction.puml
+
 hide stereotype
 skinparam linetype ortho
 
@@ -84,15 +89,36 @@ AWSCloudGroup(cloud,"CFS2.0 Primary") {
   'restapic --> internet_gateway
   restapic --> apigw
   GenericBlueGroup(mktdatalz, "MKTDAT LZ") {
-    AuroraPostgreSQLInstance(aur,"AuroraPostgres SQL Instance","ap")
-    ManagedStreamingforApacheKafka(msk, "Managed Streaming for Apache Kafka","kk")
+    AuroraPostgreSQLInstance(aur,"AuroraPostgres","ap")
+    ManagedStreamingforApacheKafka(msk, "MSK","kk")
     GenericAltGroup(npqsstreamsvc, "NPQS Streaming svc") { 
       KubernetesSvc(svcstream, "Pricing Streaming svc", "")
     }
   }
+  GenericOrangeGroup(sharedlz, "SHARED LZ") {
+    ManagedStreamingforApacheKafka(msk1, "MSK","kk1")
+  }
+  GenericPinkGroup(streamcons, "Streaming Consumers") {
+    AzureFunction(streamcons1, "AUCTION LZ","streaming")
+    'ManagedStreamingforApacheKafka(msk, "MSK","kk")
+    
+  }
+  'GenericPink.puml
+  'GenericTurquoise.puml
 
-  apigw --> dns1
-  dns1 --> onpremops360
+  'apigw --> dns1
+  'dns1 --> onpremops360
+  Rel(apigw,dns1,"NPQS API", "1")
+  Rel(apigw,dns1,"OPS360 API", "2")
+
+  Rel(dns1,onpremops360, "NPQS API", "1")
+  Rel(dns1,onpremops360, "OPS360 API", "2")
+  Rel(npqsstreamsvc,apigw,"OPS360 API", "3")
+  'aur <--> npqsstreamsvc
+  'msk <--> npqsstreamsvc
+  Rel(npqsstreamsvc,aur,"x","1")
+  Rel(npqsstreamsvc,msk,"y","2")
+  '
   GenericGroup(onpremg1,"On PRem generic 1") {
 
   }
