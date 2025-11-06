@@ -1,0 +1,133 @@
+@startuml VPC
+'Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+'SPDX-License-Identifier: MIT (For details, see https://github.com/awslabs/aws-icons-for-plantuml/blob/master/LICENSE)
+
+' Uncomment the line below for "dark mode" styling
+'!$AWS_DARK = true
+
+!define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v20.0/dist
+!include AWSPuml/AWSCommon.puml
+!include AWSPuml/AWSSimplified.puml
+!include AWSPuml/Compute/EC2.puml
+!include AWSPuml/Compute/EC2Instance.puml
+!include AWSPuml/Groups/AWSCloud.puml
+!include AWSPuml/Groups/VPC.puml
+!include AWSPuml/Groups/AvailabilityZone.puml
+!include AWSPuml/Groups/PublicSubnet.puml
+!include AWSPuml/Groups/PrivateSubnet.puml
+!include AWSPuml/Groups/GenericBlue.puml
+!include AWSPuml/Groups/GenericGreen.puml
+!include AWSPuml/Groups/Generic.puml
+!include AWSPuml/Groups/GenericAlt.puml
+!include AWSPuml/NetworkingContentDelivery/VPCNATGateway.puml
+!include AWSPuml/NetworkingContentDelivery/VPCInternetGateway.puml
+'!include AWSPuml/Containers/all.puml
+!include AWSPuml/Containers/ElasticKubernetesService.puml
+'!include AWSPuml/Database/all.puml
+!include AWSPuml/Database/AuroraPostgreSQLInstance.puml
+!include AWSPuml/NetworkingContentDelivery/all.puml
+!include AWSPuml/NetworkingContentDelivery/APIGateway.puml
+!include AWSPuml/Analytics/ManagedStreamingforApacheKafka.puml
+!include AWSPuml/NetworkingContentDelivery/Route53.puml
+!include AWSPuml/NetworkingContentDelivery/Route53HostedZone.puml
+'
+' k8s
+'
+' Kubernetes
+!define KubernetesPuml https://raw.githubusercontent.com/dcasati/kubernetes-PlantUML/master/dist
+
+!includeurl KubernetesPuml/kubernetes_Common.puml
+!includeurl KubernetesPuml/kubernetes_Context.puml
+!includeurl KubernetesPuml/kubernetes_Simplified.puml
+
+!includeurl KubernetesPuml/OSS/KubernetesSvc.puml
+!includeurl KubernetesPuml/OSS/KubernetesIng.puml
+!includeurl KubernetesPuml/OSS/KubernetesPod.puml
+!includeurl KubernetesPuml/OSS/KubernetesRs.puml
+!includeurl KubernetesPuml/OSS/KubernetesDeploy.puml
+!includeurl KubernetesPuml/OSS/KubernetesHpa.puml
+'
+!define AzurePuml https://raw.githubusercontent.com/plantuml-stdlib/Azure-PlantUML/master/dist
+!includeurl AzurePuml/AzureCommon.puml
+!includeurl AzurePuml/Databases/all.puml
+!includeurl AzurePuml/Compute/AzureFunction.puml
+!includeurl AzurePuml/Networking/AzureDNS.puml
+'
+hide stereotype
+skinparam linetype ortho
+
+GenericGreenGroup(onpremcoloprim,"ONPREM MarketsTier P") {
+  AzureDNS(dns1,"DNS","")
+  'Route53HostedZone(dns2,"DNS 2","")
+  GenericBlueGroup(onpremocp4, "Markets Dedicated OCP4") {
+    GenericGroup(onpremops360,"Ops360") {
+      KubernetesSvc(svcops3601, "Princing API svc", "")
+      KubernetesSvc(svcops3602, "Spline API svc", "")
+      KubernetesSvc(svcops3603, "Thin Client svc", "")
+    }
+  }
+  
+}
+
+AWSCloudGroup(cloud,"CFS2.0 Primary") {
+
+  'ElasticKubernetesService(eks, "Elastic Kubernetes Service","dd")
+  'ManagedStreamingforApacheKafka(msk, "Managed Streaming for Apache Kafka","kk")
+  '
+  GenericAltGroup(restapic, "REST API Consumers") {
+    KubernetesSvc(svc1, "Trading", "")
+    KubernetesSvc(svc2, "MOPS", "")
+    KubernetesSvc(svc3, "TDMS", "")
+  }
+  '
+  APIGateway(apigw, "API Gateway", "gw")
+  'restapic --> internet_gateway
+  restapic --> apigw
+  GenericBlueGroup(mktdatalz, "MKTDAT LZ") {
+    AuroraPostgreSQLInstance(aur,"AuroraPostgres SQL Instance","ap")
+    ManagedStreamingforApacheKafka(msk, "Managed Streaming for Apache Kafka","kk")
+    GenericAltGroup(npqsstreamsvc, "NPQS Streaming svc") { 
+      KubernetesSvc(svcstream, "Pricing Streaming svc", "")
+    }
+  }
+
+  apigw --> dns1
+  dns1 --> onpremops360
+  GenericGroup(onpremg1,"On PRem generic 1") {
+
+  }
+  
+
+  ' VPCInternetGateway(internet_gateway, "Internet gateway", "")
+  ' VPCGroup(vpc) {
+    
+  '   AvailabilityZoneGroup(az_1, "Availability Zone 1") {
+  '     PublicSubnetGroup(az_1_public, "Public subnet") {
+  '       VPCNATGateway(az_1_nat_gateway, "NAT gateway", "") #Transparent
+  '     }
+  '     PrivateSubnetGroup(az_1_private, "Private subnet") {
+  '       EC2Instance(az_1_ec2_1, "Instance", "") #Transparent
+  '     }
+
+  '     az_1_ec2_1 .u.> az_1_nat_gateway
+  '   }
+  
+  '   AvailabilityZoneGroup(az_2, "Availability Zone 2") {
+  '     PublicSubnetGroup(az_2_public, "Public subnet") {
+  '       VPCNATGateway(az_2_nat_gateway, "NAT gateway", "") #Transparent
+  '     }
+  '     PrivateSubnetGroup(az_2_private, "Private subnet") {
+  '       EC2Instance(az_2_ec2_1, "Instance", "") #Transparent
+  '     }
+
+  '     az_2_ec2_1 .u.> az_2_nat_gateway
+  '   }
+
+  '   az_2_nat_gateway .[hidden]u.> internet_gateway
+  '   az_1_nat_gateway .[hidden]u.> internet_gateway
+
+
+  ' }
+  
+}
+@enduml

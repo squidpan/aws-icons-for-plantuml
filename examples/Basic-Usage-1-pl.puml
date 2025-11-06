@@ -1,0 +1,40 @@
+@startuml Basic Usage - AWS IoT Rules Engine
+'Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+'SPDX-License-Identifier: MIT (For details, see https://github.com/awslabs/aws-icons-for-plantuml/blob/master/LICENSE)
+
+' Uncomment the line below for "dark mode" styling
+'!$AWS_DARK = true
+
+!define AWSPuml https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v20.0/dist
+!include AWSPuml/AWSCommon.puml
+!include AWSPuml/InternetOfThings/IoTRule.puml
+!include AWSPuml/Analytics/all.puml
+!include AWSPuml/Analytics/ManagedStreamingforApacheKafka.puml
+!include AWSPuml/Analytics/KinesisDataStreams.puml
+!include AWSPuml/ApplicationIntegration/all.puml
+!include AWSPuml/ApplicationIntegration/SimpleQueueService.puml
+
+!include AWSPuml/Containers/all.puml
+'!include AWSPuml/Containers/ElasticKubernetesService.puml
+!include AWSPuml/Database/all.puml
+'!include AWSPuml/Database/AuroraPostgreSQLInstance.puml
+!include AWSPuml/NetworkingContentDelivery/all.puml
+!include AWSPuml/NetworkingContentDelivery/APIGateway.puml
+
+left to right direction
+
+agent "Published Event" as event
+
+APIGateway(apigw, "Amazon API Gateway", "gw")
+AuroraPostgreSQLInstance(aur,"AuroraPostgres SQL Instance","ap")
+ElasticKubernetesService(eks, "Elastic Kubernetes Service","dd")
+ManagedStreamingforApacheKafka(msk, "Managed Streaming for Apache Kafka","kk")
+IoTRule(iotRule, "Action Error Rule", "error if Kinesis fails")
+KinesisDataStreams(eventStream, "IoT Events", "2 shards")
+SimpleQueueService(errorQueue, "Rule Error Queue", "failed Rule actions")
+
+event --> iotRule : JSON message
+iotRule --> eventStream : messages
+iotRule --> errorQueue : Failed action message
+
+@enduml
