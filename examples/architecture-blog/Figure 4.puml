@@ -13,7 +13,7 @@
 !include AWSPuml/NetworkingContentDelivery/CloudFront.puml
 !include AWSPuml/NetworkingContentDelivery/CloudFrontEdgeLocation.puml
 
-Figure 3. API version not foundhide footbox
+'Figure 3. API version not foundhide footbox
 skinparam style strictuml
 
 skinparam participant {
