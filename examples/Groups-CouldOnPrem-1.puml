@@ -116,8 +116,8 @@ AWSCloudGroup(cloud,"CFS2.0 Primary") {
   Rel(npqsstreamsvc,apigw,"OPS360 API", "3")
   'aur <--> npqsstreamsvc
   'msk <--> npqsstreamsvc
-  Rel(npqsstreamsvc,aur,"x","1")
-  Rel(npqsstreamsvc,msk,"y","2")
+  'Rel(npqsstreamsvc,aur,"x","1")
+  'Rel(npqsstreamsvc,msk,"y","2")
   '
   GenericGroup(onpremg1,"On PRem generic 1") {
 
