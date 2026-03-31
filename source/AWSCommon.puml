@@ -57,7 +57,7 @@
 ' Analytics; Games; Networking & Content Delivery; Serverless
 !define AWS_COLOR_PURPLE #8C4FFF
 !$AWS_COLOR_GALAXY = "#8C4FFF"
-' Business Applications; Contact Center; Front-End Web & Mobile; Robotics; Security, Identity & Compliance
+' Business Applications; Contact Center; Front-End Web & Mobile; Security, Identity & Compliance
 !define AWS_COLOR_RED #DD344C
 !$AWS_COLOR_MARS = "#DD344C"
 ' Artificial Intelligence; End User Computing; Migration & Modernization
@@ -75,6 +75,7 @@
   "contactcenter": "#DD344C",
   "containers": "#ED7100",
   "customerenablement": "#C925D1",
+  "customerexperience": "#DD344C",
   "database": "#C925D1",
   "developertools": "#C925D1",
   "endusercomputing": "#01A88D",
@@ -87,9 +88,9 @@
   "mediaservices": "#ED7100",
   "migrationtransfer": "#01A88D",
   "migrationmodernization": "#01A88D",
+  "multicloudandhybrid": "#E7157B",
   "networkingcontentdelivery": "#8C4FFF",
   "quantumtechnologies": "#ED7100",
-  "robotics": "#DD344C",
   "satellite": "#C925D1",
   "securityidentitycompliance": "#DD344C",
   "serverless": "#8C4FFF",
